@@ -30,8 +30,8 @@ jobs:
       Channel_Prod_Web:
         ChannelName: Prod-Web
         DistributionUrl: https://appinstallerdemo.azurewebsites.net/Contoso/
-        MsixPackageId: HeadTrax.DevOps
-        MsixPublisherId: CN=build
+        MsixPackageId: HeadTrax
+        MsixPublisherId: CN=Contoso Software (FOR LAB USE ONLY), O=Contoso Corporation, C=US
         MsixPackageDisplayName: HeadTrax (Prod)
         MsixBuildMode: SideLoadOnly
         MsixGenerateAppInstaller: true
