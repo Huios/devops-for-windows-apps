@@ -8,7 +8,7 @@
 
   <Identity
     Name="HeadTrax"
-    Publisher="CN=Contoso Software, O=Contoso Corporation, C=US"
+    Publisher="CN=Contoso Software (FOR LAB USE ONLY), O=Contoso Corporation, C=US"
     Version="1.0.0.0" />
 
   <Properties>
