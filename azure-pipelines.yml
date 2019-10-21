@@ -69,7 +69,7 @@ jobs:
     displayName: Build for $(BuildConfiguration)
     inputs:
       solution: HeadTrax.sln
-      platform: x86
+      platform: x64
       msbuildArguments: /restore /p:AppInstallerUri=$(DistributionUrl) /p:UapAppxPackageBuildMode=$(MsixBuildMode) /p:GenerateAppInstallerFile=$(MsixGenerateAppInstaller)
       configuration: $(BuildConfiguration)
       maximumCpuCount: false
