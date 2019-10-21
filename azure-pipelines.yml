@@ -6,7 +6,6 @@ trigger:
   paths:
     exclude:
     - '**/*.md'
-    - 'UITests/*'
 
 pr:
   branches:
@@ -16,7 +15,6 @@ pr:
   paths:
     exclude:
     - '**/*.md'
-    - 'UITests/*'
 
 variables:
   BuildConfiguration: Release
@@ -29,28 +27,28 @@ jobs:
 
   strategy:
     matrix:
-      Channel_CD_Web:
+      Channel_Web_Deployment:
         ChannelName: CD-Web
-        DistributionUrl: https://mywpfapp.azurewebsites.net/CD
-        MsixPackageId: MyWPFApp.DevOpsDemo.CD
+        DistributionUrl: https://appinstallerdemo.azurewebsites.net/Contoso/
+        MsixPackageId: HeadTrax.DevOps.CD
         MsixPublisherId: CN=build
-        MsixPackageDisplayName: MyWPFApp (CD)
+        MsixPackageDisplayName: HeadTrax (CD)
         MsixBuildMode: SideLoadOnly
         MsixGenerateAppInstaller: true
       Channel_Prod_Web:
         ChannelName: Prod-Web
-        DistributionUrl: https://mywpfapp.z5.web.core.windows.net/Prod
-        MsixPackageId: MyWPFApp.DevOpsDemo
+        DistributionUrl: https://appinstallerdemo.azurewebsites.net/Contoso/
+        MsixPackageId: HeadTrax.DevOps
         MsixPublisherId: CN=build
-        MsixPackageDisplayName: MyWPFApp (Prod)
+        MsixPackageDisplayName: HeadTrax (Prod)
         MsixBuildMode: SideLoadOnly
         MsixGenerateAppInstaller: true
       Channel_Prod_Store:
         ChannelName: Prod-Store
         DistributionUrl: https://not/used
-        MsixPackageId: MyWPFApp
+        MsixPackageId: HeadTrax.DevOps.Store
         MsixPublisherId: CN=E40A5878-9BC7-45A3-BBFC-B988EA6795B5
-        MsixPackageDisplayName: MyWPFApp (Store)
+        MsixPackageDisplayName: HeadTrax (Store)
         MsixBuildMode: CI
         MsixGenerateAppInstaller: false
 
@@ -73,42 +71,31 @@ jobs:
   - powershell: |
       # Update appxmanifest. This must be done before build.
       # Set the per-channel values into the appxmanifest, replacing the checked-in values
-      [xml]$manifest= get-content ".\MyWPFApp.Package\Package.appxmanifest"
+      [xml]$manifest= get-content ".\HeadTraxPackage\Package.appxmanifest"
       $manifest.Package.Identity.Version = "$(GitBuildVersionSimple).0"
       $manifest.Package.Identity.Name = "$(MsixPackageId)"
       $manifest.Package.Identity.Publisher = "$(MsixPublisherId)"
       $manifest.Package.Properties.DisplayName = "$(MsixPackageDisplayName)"
       $manifest.Package.Applications.Application.VisualElements.DisplayName = "$(MsixPackageDisplayName)"
-      $manifest.save(".\MyWPFApp.Package\Package.appxmanifest")
+      $manifest.save(".\HeadTraxPackage\Package.appxmanifest")
 
     displayName: Update manifest version
-
-  - powershell: |
-      # Update App Insights instrumentation key
-      [xml]$doc = Get-Content ".\MyWPFApp\ApplicationInsights.config"
-      $doc.ApplicationInsights.InstrumentationKey = "$(AppInsightsKey)"
-      $doc.save(".\MyWPFApp\ApplicationInsights.config")
-
-    displayName: Set AppInsights Config
-    env:
-      AppInsightsKey: $(AppInsightsKey)
-    condition: and(succeeded(), not(eq(variables['build.reason'], 'PullRequest')), not(eq(variables['AppInsightsKey'], '')))
 
   - task: MSBuild@1
     displayName: Build for $(BuildConfiguration)
     inputs:
-      solution: MyWPFApp.sln
+      solution: HeadTrax.sln
       platform: x86
       msbuildArguments: /restore /p:AppInstallerUri=$(DistributionUrl) /p:UapAppxPackageBuildMode=$(MsixBuildMode) /p:GenerateAppInstallerFile=$(MsixGenerateAppInstaller)
       configuration: $(BuildConfiguration)
       maximumCpuCount: false
 
-  - script: copy build.cer MyWPFApp.Package\AppPackages\MyWPFApp.Package_$(GitBuildVersionSimple).0_x86_Test\MyWPFApp.Package_$(GitBuildVersionSimple).0_x86.cer
+  - script: copy build.cer HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x86_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x86.cer
     displayName: Copy Certificate to versioned dir
     condition: and(succeeded(), not(eq(variables['ChannelName'], 'Prod-Store')))
 
   - task: PublishPipelineArtifact@0
     inputs:
       artifactName: $(ChannelName)
-      targetPath: MyWPFApp.Package/AppPackages
+      targetPath: HeadTraxPackage/AppPackages
 
