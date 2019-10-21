@@ -27,14 +27,6 @@ jobs:
 
   strategy:
     matrix:
-      Channel_Web_Deployment:
-        ChannelName: CD-Web
-        DistributionUrl: https://appinstallerdemo.azurewebsites.net/Contoso/
-        MsixPackageId: HeadTrax.DevOps.CD
-        MsixPublisherId: CN=build
-        MsixPackageDisplayName: HeadTrax (CD)
-        MsixBuildMode: SideLoadOnly
-        MsixGenerateAppInstaller: true
       Channel_Prod_Web:
         ChannelName: Prod-Web
         DistributionUrl: https://appinstallerdemo.azurewebsites.net/Contoso/
@@ -43,14 +35,6 @@ jobs:
         MsixPackageDisplayName: HeadTrax (Prod)
         MsixBuildMode: SideLoadOnly
         MsixGenerateAppInstaller: true
-      Channel_Prod_Store:
-        ChannelName: Prod-Store
-        DistributionUrl: https://not/used
-        MsixPackageId: HeadTrax.DevOps.Store
-        MsixPublisherId: CN=E40A5878-9BC7-45A3-BBFC-B988EA6795B5
-        MsixPackageDisplayName: HeadTrax (Store)
-        MsixBuildMode: CI
-        MsixGenerateAppInstaller: false
 
   steps:
   - task: UseDotNet@2
