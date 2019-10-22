@@ -130,8 +130,6 @@
     <Content Include="Assets\HeadTraxData.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="ContosoLab.pfx" />
-    <None Include="HeadTrax_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
