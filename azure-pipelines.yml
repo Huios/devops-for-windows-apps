@@ -74,9 +74,9 @@ jobs:
       configuration: $(BuildConfiguration)
       maximumCpuCount: false
 
-  - script: copy build.cer HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.cer
-    displayName: Copy Certificate to versioned dir
-    condition: and(succeeded(), not(eq(variables['ChannelName'], 'Prod-Store')))
+  - #script: copy build.cer HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.cer
+    #displayName: Copy Certificate to versioned dir
+    #condition: and(succeeded(), not(eq(variables['ChannelName'], 'Prod-Store')))
 
   - task: PublishPipelineArtifact@0
     inputs:
