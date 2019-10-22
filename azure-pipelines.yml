@@ -32,7 +32,7 @@ jobs:
         DistributionUrl: https://appinstallerdemo.azurewebsites.net/Contoso/
         MsixPackageId: HeadTrax
         MsixPublisherId: CN=Contoso Software (FOR LAB USE ONLY), O=Contoso Corporation, C=US
-        MsixPackageDisplayName: HeadTrax (Prod)
+        MsixPackageDisplayName: HeadTrax
         MsixBuildMode: SideLoadOnly
         MsixGenerateAppInstaller: true
 
