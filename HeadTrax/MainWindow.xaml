@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Background="SkyBlue" x:Name="LeftPane">
             <StackPanel Orientation="Vertical">
-                <Border Height="250" BorderBrush="DarkBlue" BorderThickness="2.5" Background="LightPink" x:Name="QuickLinksPane">
+                <Border Height="250" BorderBrush="DarkBlue" BorderThickness="2.5" Background="SkyBlue" x:Name="QuickLinksPane">
                     <StackPanel>
                         <Label Height="35" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="DarkBlue" FontSize="20" FontWeight="Bold" x:Name="QuickLinksLabel">Quick Links</Label>
                         <TreeView Height="215" FontSize="17">
