@@ -68,12 +68,12 @@ jobs:
   - powershell: |
       # Update appinstaller file
       [xml]$file= get-content ".\HeadTraxPackage\Package.appinstaller"
-      $file.AppInstaller.Uri = "$(DistributionUrl)"
+      $file.AppInstaller.Uri = "$(DistributionUrl)/HeadTrax.appinstaller"
       $file.AppInstaller.Version = "$(GitBuildVersionSimple).0"
-      $file.MainBundle.Name = "$(MsixPackageId)"
-      $file.MainBundle.Version = "$(GitBuildVersionSimple).0"
-      $file.MainBundle.Publisher = "$(MsixPublisherId)"
-      $file.MainBundle.Uri = "$(DistributionUrl)"
+      $file.AppInstaller.MainBundle.Name = "$(MsixPackageId)"
+      $file.AppInstaller.MainBundle.Version = "$(GitBuildVersionSimple).0"
+      $file.AppInstaller.MainBundle.Publisher = "$(MsixPublisherId)"
+      $file.AppInstaller.MainBundle.Uri = "$(DistributionUrl)/HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix"
       $file.save(".\HeadTraxPackage\HeadTrax.appinstaller")
 
     displayName: Update appinstaller file
