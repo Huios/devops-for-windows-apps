@@ -6,7 +6,8 @@
   <MainPackage Name="{Name}"
               Version="{Version}"
               Publisher="{Publisher}"
-              Uri="{MainPackageUri}"/>
+              Uri="{MainPackageUri}"
+              ProcessorArchitecture="x64"/>
 
   <UpdateSettings>
     <OnLaunch
