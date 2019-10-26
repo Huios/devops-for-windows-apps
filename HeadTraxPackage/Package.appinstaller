@@ -3,7 +3,7 @@
               Version="{Version}"
               xmlns="http://schemas.microsoft.com/appx/appinstaller/2018">
 
-  <MainBundle Name="{Name}"
+  <MainPackage Name="{Name}"
               Version="{Version}"
               Publisher="{Publisher}"
               Uri="{MainPackageUri}"/>
