@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Background="SkyBlue" x:Name="LeftPane">
             <StackPanel Orientation="Vertical">
-                <Border Height="250" BorderBrush="SkyBlue" BorderThickness="2.5" Background="Green" x:Name="QuickLinksPane">
+                <Border Height="250" BorderBrush="DarkBlue" BorderThickness="2.5" Background="LightBlue" x:Name="QuickLinksPane">
                     <StackPanel>
                         <Label Height="35" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="DarkBlue" FontSize="20" FontWeight="Bold" x:Name="QuickLinksLabel">Quick Links</Label>
                         <TreeView Height="215" FontSize="17">
@@ -27,13 +27,13 @@
                                 <TreeViewItem Header="Promotion Compensation Changes"/>
                                 <TreeViewItem Header="My HeadTrax Preferences"/>
                                 <TreeViewItem Header="Routing Rules Admin"/>
-                                <TreeViewItem Header="Human Resources Web" HorizontalAlignment="Right" Width="328"/>
+                                <TreeViewItem Header="Human Resources Web"/>
                                 <TreeViewItem Header="New Hire Status"/>
                             </TreeViewItem>
                         </TreeView>
                     </StackPanel>
                 </Border>
-                <Border Height="200" BorderBrush="DarkBlue" BorderThickness="2.5" Margin="0,10,0,0" Background="Green" x:Name="HeadcountsPane">
+                <Border Height="200" BorderBrush="DarkBlue" BorderThickness="2.5" Margin="0,10,0,0" Background="LightBlue" x:Name="HeadcountsPane">
                     <StackPanel>
                         <Label Height="35" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="DarkBlue" FontSize="20" FontWeight="Bold" x:Name="HeadcountLabel">Headcount Stat</Label>
                         <TextBlock Text="Contoso Corporation" Margin="15,5,5,0" FontSize="17"/>
