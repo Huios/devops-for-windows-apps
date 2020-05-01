@@ -18,7 +18,7 @@ steps:
      [System.Xml.Linq.XName]
        "{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
    $doc.Root.Element($xName).Attribute("Version").Value =
-     "$(major).$(minor).$(build).$(revision)";
+     "$(major).$(minor).$(build).$(revision)"
    $doc.Save($path)
   displayName: 'Version Package Manifest'
 
