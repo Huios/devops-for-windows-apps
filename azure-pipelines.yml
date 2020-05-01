@@ -10,16 +10,13 @@ variables:
   revision: $[counter('rev', 0)]
 
 steps:
+
 - powershell: |
-   [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
-   $path = ".\HeadTraxPackage\Package.appxmanifest"
-   $doc = [System.Xml.Linq.XDocument]::Load($path)
-   $xName =
-     [System.Xml.Linq.XName]
-       "{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
-   $doc.Root.Element($xName).Attribute("Version").Value =
-     "$(major).$(minor).$(build).$(revision)"
-   $doc.Save($path)
+     # Update appxmanifest. This must be done before build.
+     [xml]$manifest= get-content ".\HeadTraxPackage\Package.appxmanifest"
+     $manifest.Package.Identity.Version = "$(major).$(minor).$(build).$(revision)"
+     $manifest.save(".\HeadTraxPackage\Package.appxmanifest")
+
   displayName: 'Version Package Manifest'
 
 - task: MSBuild@1
