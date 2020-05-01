@@ -8,11 +8,16 @@ variables:
   minor: 0
   build: 0
   revision: $[counter('rev', 0)]
+  DistributionUrl: https://appinstallerdemo.azurewebsites.net/ContosoDev
+  MsixPackageId: HeadTrax
+  MsixPublisherId: CN=Contoso Software (FOR LAB USE ONLY), O=Contoso Corporation, C=US
+  MsixPackageDisplayName: HeadTrax
+  MsixBuildMode: SideLoadOnly
 
 steps:
 
 - powershell: |
-     # Update appxmanifest. This must be done before build.
+     # Update appxmanifest. This must be done before the build.
      [xml]$manifest= get-content ".\HeadTraxPackage\Package.appxmanifest"
      $manifest.Package.Identity.Version = "$(major).$(minor).$(build).$(revision)"
      $manifest.save(".\HeadTraxPackage\Package.appxmanifest")
@@ -24,8 +29,7 @@ steps:
     solution: HeadTrax.sln
     platform: $(buildPlatform)
     configuration: $(buildConfiguration)
-    msbuildArguments: '/p:OutputPath=NonPackagedApp
-     /p:UapAppxPackageBuildMode=SideLoadOnly  /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\MsixDesktopApp.msix /p:AppxPackageSigningEnabled=false'
+    msbuildArguments: '/p:OutputPath=NonPackagedApp /p:UapAppxPackageBuildMode=SideLoadOnly  /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\MsixDesktopApp.msix /p:AppxPackageSigningEnabled=false /p:AppInstallerUri=$(DistributionUrl) /p:MainPackageUri=$(DistributionUrl)'
   displayName: 'Package the App'
 
 - task: DownloadSecureFile@1
