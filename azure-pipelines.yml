@@ -29,7 +29,7 @@ steps:
     solution: HeadTrax.sln
     platform: $(buildPlatform)
     configuration: $(buildConfiguration)
-    msbuildArguments: '/restore /p:AppInstallerUri=$(DistributionUrl) /p:MainPackageUri=$(DistributionUrl) /p:UapAppxPackageBuildMode=$(MsixBuildMode) /p:GenerateAppInstallerFile=$(MsixGenerateAppInstaller)'
+    msbuildArguments: '/restore /p:AppInstallerUri=$(DistributionUrl) /p:MainPackageUri=$(DistributionUrl) /p:UapAppxPackageBuildMode=$(MsixBuildMode) /p:GenerateAppInstallerFile=True /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)/HeadTraxPackage_$(major).$(minor).$(build).$(revision)_$(buildConfiguration).msix'
     maximumCpuCount: false
   displayName: 'Package the App'
 
@@ -40,7 +40,7 @@ steps:
   
 - script: '"C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\signtool"
     sign /fd SHA256 /f $(Agent.TempDirectory)/ContosoLab.pfx /p secret $(
-    Build.ArtifactStagingDirectory)/MsixDesktopApp.msix'
+    Build.ArtifactStagingDirectory)/HeadTraxPackage_$(major).$(minor).$(build).$(revision)_$(buildConfiguration).msix'
   displayName: 'Sign MSIX Package'
 
 - task: PublishBuildArtifacts@1
