@@ -2,7 +2,7 @@ pool:
   vmImage: windows-2019
 
 variables:
-  buildPlatform: 'x86'
+  buildPlatform: 'x64'
   buildConfiguration: 'release'
   major: 1
   minor: 0
@@ -29,7 +29,8 @@ steps:
     solution: HeadTrax.sln
     platform: $(buildPlatform)
     configuration: $(buildConfiguration)
-    msbuildArguments: '/p:UapAppxPackageBuildMode=SideLoadOnly  /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\MsixDesktopApp.msix /p:AppxPackageSigningEnabled=false /p:AppInstallerUri=$(DistributionUrl) /p:MainPackageUri=$(DistributionUrl)'
+    msbuildArguments: '/restore /p:AppInstallerUri=$(DistributionUrl) /p:MainPackageUri=$(DistributionUrl) /p:UapAppxPackageBuildMode=$(MsixBuildMode) /p:GenerateAppInstallerFile=$(MsixGenerateAppInstaller)'
+    maximumCpuCount: false
   displayName: 'Package the App'
 
 - task: DownloadSecureFile@1
