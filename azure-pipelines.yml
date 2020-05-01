@@ -1,98 +1,45 @@
-trigger:
-  branches:
-    include:
-    - master
-    - rel/*
-  paths:
-    exclude:
-    - '**/*.md'
-
-pr:
-  branches:
-    include:
-    - master
-    - rel/*
-  paths:
-    exclude:
-    - '**/*.md'
+pool: 
+  vmImage: windows-2019
 
 variables:
-  BuildConfiguration: Release
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  buildPlatform: 'x86'
+  buildConfiguration: 'release'
+  major: 1
+  minor: 0
+  build: 0
+  revision: $[counter('rev', 0)]
 
-jobs:
-- job: Build
-  pool:
-    vmImage: windows-2019
+steps:
+- powershell: |
+   [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
+   $path = ".\HeadTraxPackage\Package.appxmanifest"
+   $doc = [System.Xml.Linq.XDocument]::Load($path)
+   $xName =
+     [System.Xml.Linq.XName]
+       "{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
+   $doc.Root.Element($xName).Attribute("Version").Value =
+     "$(major).$(minor).$(build).$(revision)";
+   $doc.Save($path)
+  displayName: 'Version Package Manifest'
 
-  strategy:
-    matrix:
-      Channel_Prod_Web:
-        ChannelName: Prod-Web
-        DistributionUrl: https://appinstallerdemo.azurewebsites.net/ContosoDev
-        MsixPackageId: HeadTrax
-        MsixPublisherId: CN=Contoso Software (FOR LAB USE ONLY), O=Contoso Corporation, C=US
-        MsixPackageDisplayName: HeadTrax
-        MsixBuildMode: SideLoadOnly
-        #MsixGenerateAppInstaller: true
+- task: MSBuild@1
+  inputs:
+    solution: HeadTrax.sln
+    platform: $(buildPlatform)
+    configuration: $(buildConfiguration)
+    msbuildArguments: '/p:OutputPath=NonPackagedApp
+     /p:UapAppxPackageBuildMode=SideLoadOnly  /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\MsixDesktopApp.msix /p:AppxPackageSigningEnabled=false'
+  displayName: 'Package the App'
 
-  steps:
-  - task: UseDotNet@2
-    displayName: 'Use .NET Core SDK 3.0.x'
-    inputs:
-      version: 3.0.x
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: 'ContosoLab.pfx'
+  displayName: 'Download Secure PFX File'
+  
+- script: '"C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\signtool"
+    sign /fd SHA256 /f $(Agent.TempDirectory)/ContosoLab.pfx /p secret $(
+    Build.ArtifactStagingDirectory)/MsixDesktopApp.msix'
+  displayName: 'Sign MSIX Package'
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: custom
-      custom: tool
-      arguments: install --tool-path . nbgv
-    displayName: Install NBGV tool
-
-  - script: nbgv cloud -c -a
-    displayName: Set Version
-
-  - powershell: |
-      # Update appxmanifest. This must be done before build.
-      # Set the per-channel values into the appxmanifest, replacing the checked-in values
-      [xml]$manifest= get-content ".\HeadTraxPackage\Package.appxmanifest"
-      $manifest.Package.Identity.Version = "$(GitBuildVersionSimple).0"
-      $manifest.Package.Identity.Name = "$(MsixPackageId)"
-      $manifest.Package.Identity.Publisher = "$(MsixPublisherId)"
-      $manifest.Package.Properties.DisplayName = "$(MsixPackageDisplayName)"
-      $manifest.Package.Applications.Application.VisualElements.DisplayName = "$(MsixPackageDisplayName)"
-      $manifest.save(".\HeadTraxPackage\Package.appxmanifest")
-
-    displayName: Update manifest
-
-  - powershell: |
-      # Update appinstaller file
-      [xml]$file= get-content ".\HeadTraxPackage\Package.appinstaller"
-      $file.AppInstaller.Uri = "$(DistributionUrl)/HeadTrax.appinstaller"
-      $file.AppInstaller.Version = "$(GitBuildVersionSimple).0"
-      $file.AppInstaller.MainPackage.Name = "$(MsixPackageId)"
-      $file.AppInstaller.MainPackage.Version = "$(GitBuildVersionSimple).0"
-      $file.AppInstaller.MainPackage.Publisher = "$(MsixPublisherId)"
-      $file.AppInstaller.MainPackage.Uri = "$(DistributionUrl)/HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix"
-      $file.save(".\HeadTraxPackage\HeadTrax.appinstaller")
-
-    displayName: Update appinstaller file
-
-  - task: MSBuild@1
-    displayName: Build for $(BuildConfiguration)
-    inputs:
-      solution: HeadTrax.sln
-      platform: x64
-      msbuildArguments: /restore /p:AppInstallerUri=$(DistributionUrl) /p:MainPackageUri=$(DistributionUrl) /p:UapAppxPackageBuildMode=$(MsixBuildMode) /p:GenerateAppInstallerFile=$(MsixGenerateAppInstaller)
-      configuration: $(BuildConfiguration)
-      maximumCpuCount: false
-
-  - script: copy .\HeadTraxPackage\HeadTrax.appinstaller HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTrax.appinstaller
-    displayName: Copy appinstaller file
-    condition: succeeded()
-
-  - task: PublishPipelineArtifact@0
-    inputs:
-      artifactName: $(ChannelName)
-      targetPath: HeadTraxPackage/AppPackages
-
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
