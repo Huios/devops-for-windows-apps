@@ -9,10 +9,7 @@ variables:
   build: 0
   revision: $[counter('rev', 0)]
   DistributionUrl: https://appinstallerdemo.azurewebsites.net/ContosoDev
-  MsixPackageId: HeadTrax
-  MsixPublisherId: CN=Contoso Software (FOR LAB USE ONLY), O=Contoso Corporation, C=US
-  MsixPackageDisplayName: HeadTrax
-  MsixBuildMode: SideLoadOnly
+
 
 steps:
 
@@ -34,12 +31,13 @@ steps:
   displayName: 'Package the App'
 
 - task: DownloadSecureFile@1
+  name : cert
   inputs:
     secureFile: 'ContosoLab.pfx'
   displayName: 'Download Secure PFX File'
   
 - script: '"C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\signtool"
-    sign /fd SHA256 /f $(Agent.TempDirectory)/ContosoLab.pfx /p secret $(
+    sign /fd SHA256 /f $(Agent.TempDirectory)/ContosoLab.pfx /p $(cert.secureFile.secret) $(
     Build.ArtifactStagingDirectory)/HeadTraxPackage_$(major).$(minor).$(build).$(revision)_$(buildConfiguration).msix'
   displayName: 'Sign MSIX Package'
 
