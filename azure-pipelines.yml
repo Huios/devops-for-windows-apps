@@ -90,7 +90,7 @@ jobs:
 #Generate MSIX app attach VHD
   - powershell: |
       # Update appinstaller file
-      New-VHD -SizeBytes 5MB -Path c:\temp\headtrax.vhd -Dynamic -Confirm:$false
+      $object = New-VHD -SizeBytes 5MB -Path c:\temp\headtrax.vhd -Dynamic -Confirm:$false
       $vhdObject = Mount-VHD c:\temp\headtrax.vhd -Passthru
       $disk = Initialize-Disk -Passthru -Number $vhdObject.Number
       $partition = New-Partition -AssignDriveLetter -UseMaximumSize -DiskNumber $disk.Number
