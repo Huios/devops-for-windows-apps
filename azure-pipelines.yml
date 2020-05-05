@@ -87,6 +87,21 @@ jobs:
     displayName: Copy appinstaller file
     condition: succeeded()
 
+#Generate MSIX app attach VHD
+  - powershell: |
+      # Update appinstaller file
+      New-VHD -SizeBytes 5MB -Path c:\temp\headtrax.vhd -Dynamic -Confirm:$false
+      $vhdObject = Mount-VHD c:\temp\headtrax.vhd -Passthru
+      $disk = Initialize-Disk -Passthru -Number $vhdObject.Number
+      $partition = New-Partition -AssignDriveLetter -UseMaximumSize -DiskNumber $disk.Number
+      Format-Volume -FileSystem NTFS -Confirm:$false -DriveLetter $partition.DriveLetter -Force
+      $path = $partition.DriveLetter + ':\HeadTraxRoot'
+      New-Item -Path $path -ItemType Directory
+
+     # $file.AppInstaller.MainPackage.Uri = "$(DistributionUrl)/HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix"
+     # $file.save(".\HeadTraxPackage\HeadTrax.appinstaller")
+    displayName: Generate Expanded MSIX + VHD
+
   - task: PublishPipelineArtifact@0
     inputs:
       artifactName: $(ChannelName)
