@@ -56,7 +56,7 @@ jobs:
     inputs:
      targetType: 'inline'
      script: |
-       Enable-WindowsOptionalFeature -Online -FeatureName  Microsoft-Hyper-V-Management-PowerShell -All
+       Enable-WindowsOptionalFeature -Online -FeatureName  Microsoft-Hyper-V-All
     displayName: Setup Hyper-V
 
   - powershell: |
@@ -98,7 +98,6 @@ jobs:
     inputs:
      targetType: 'inline'
      script: |
-       Enable-WindowsOptionalFeature -Online -FeatureName  Microsoft-Hyper-V-Management-PowerShell
        New-VHD -SizeBytes 5MB -Path c:\temp\headtrax1.vhd -Dynamic -Confirm:$false
        $vhdObject = Mount-VHD c:\temp\headtrax1.vhd -Passthru
        $disk = Initialize-Disk -Passthru -Number $vhdObject.Number
