@@ -57,7 +57,9 @@ jobs:
      targetType: 'inline'
      script: |
        #Enable-WindowsOptionalFeature -Online -FeatureName  Microsoft-Hyper-V -All -NoRestart
-       Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart
+       #Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart
+       Enable-WindowsOptionalFeature -Online -FeatureName  Microsoft-Hyper-V-Tools -All
+
     displayName: Setup Hyper-V
 
   - powershell: |
