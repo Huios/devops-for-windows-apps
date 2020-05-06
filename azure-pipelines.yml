@@ -56,7 +56,7 @@ jobs:
     inputs:
      targetType: 'inline'
      script: |
-       Enable-WindowsOptionalFeature -Online -FeatureName  Microsoft-Hyper-V -All -confirm:$false
+       Enable-WindowsOptionalFeature -Online -FeatureName  Microsoft-Hyper-V -All -NoRestart
     displayName: Setup Hyper-V
 
   - powershell: |
