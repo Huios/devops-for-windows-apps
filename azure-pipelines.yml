@@ -93,6 +93,7 @@ jobs:
       script: |
         echo.> c:\temp\command.txt create vdisk file=c:\temp\headtrax.vhd maximum=150
         diskpart /s c:\temp\command.txt
+    displayName: Create VHD
 
   - powershell: |
       # Update appinstaller file
@@ -105,6 +106,8 @@ jobs:
       New-Item -Path $dirPath -ItemType Directory
 
       $packagePath = .\HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix
+      Write-Host $packagePath
+      Write-Host $dirPath
       .\msixmgr\x64\msixmgr.exe -Unpack -packagePath $packagePath -destination $dirPath -applyacls
 
      # $file.AppInstaller.MainPackage.Uri = "$(DistributionUrl)/HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix"
