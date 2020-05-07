@@ -91,7 +91,7 @@ jobs:
   - task: CmdLine@2
     inputs:
       script: |
-        echo.> c:\temp\command.txt create vdisk file=c:\temp\headtrax.vhd maximum=10 
+        echo.> c:\temp\command.txt create vdisk file=c:\temp\headtrax.vhd maximum=100 
         diskpart /s c:\temp\command.txt
 
   - powershell: |
