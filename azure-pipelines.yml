@@ -87,24 +87,6 @@ jobs:
     displayName: Copy appinstaller file
     condition: succeeded()
 
-  - task: PowerShell@2
-    inputs:
-     targetType: 'inline'
-     script: |
-       New-VHD -SizeBytes 5MB -Path c:\temp\headtrax1.vhd -Dynamic -Confirm:$false
-       $vhdObject = Mount-VHD c:\temp\headtrax1.vhd -Passthru
-       $disk = Initialize-Disk -Passthru -Number $vhdObject.Number
-       $partition = New-Partition -AssignDriveLetter -UseMaximumSize -DiskNumber $disk.Number
-       Format-Volume -FileSystem NTFS -Confirm:$false -DriveLetter $partition.DriveLetter -Force
-       $dirPath = $partition.DriveLetter + ':\HeadTraxRoot'
-       New-Item -Path $dirPath -ItemType Directory
-      
-       cd msixmgr\x64
-       $packagePath = HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix
-       .\msixmgr.exe -Unpack -packagePath $packagePath -destination $dirPath -applyacls
-
-    displayName: One Generate Expanded MSIX + VHD
-
 #Generate MSIX app attach VHD
   - task: CmdLine@2
     inputs:
