@@ -104,9 +104,8 @@ jobs:
       $dirPath = $partition.DriveLetter + ':\HeadTraxRoot'
       New-Item -Path $dirPath -ItemType Directory
 
-      cd msixmgr\x64
-      $packagePath = HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix
-      .\msixmgr.exe -Unpack -packagePath $packagePath -destination $dirPath -applyacls
+      $packagePath = .\HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix
+      .\msixmgr\x64\msixmgr.exe -Unpack -packagePath $packagePath -destination $dirPath -applyacls
 
      # $file.AppInstaller.MainPackage.Uri = "$(DistributionUrl)/HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix"
      # $file.save(".\HeadTraxPackage\HeadTrax.appinstaller")
