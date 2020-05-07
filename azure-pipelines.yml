@@ -104,7 +104,7 @@ jobs:
       $dirPath = $partition.DriveLetter + ':\HeadTraxRoot'
       New-Item -Path $dirPath -ItemType Directory
 
-      $packagePath = $(Build.ArtifactStagingDirectory)\HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix
+      $packagePath = "$(Build.ArtifactStagingDirectory)\HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix"
       Write-Host $packagePath
       Write-Host $dirPath
       .\msixmgr\x64\msixmgr.exe -Unpack -packagePath $packagePath -destination $dirPath -applyacls
