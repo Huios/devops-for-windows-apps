@@ -85,7 +85,7 @@ jobs:
 
   - script: copy .\HeadTraxPackage\HeadTrax.appinstaller HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTrax.appinstaller
   - script: copy .\HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix .\msixmgr\x64\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix
-    displayName: Copy appinstaller file
+    displayName: Copy appinstaller file + MSIX 
     condition: succeeded()
 
 #Generate MSIX app attach VHD
@@ -116,7 +116,7 @@ jobs:
      # $file.save(".\HeadTraxPackage\HeadTrax.appinstaller")
     displayName: Generate Expanded MSIX + VHD
 
-  - script: copy c:\temp\headtrax.vhd HeadTraxPackage\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\headtrax.vhd
+  - script: copy c:\temp\headtrax.vhd HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\headtrax.vhd
     displayName: Copy VHD to Output
     condition: succeeded()
 
