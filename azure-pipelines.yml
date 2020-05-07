@@ -96,7 +96,6 @@ jobs:
     displayName: Create VHD
 
   - powershell: |
-      # Update appinstaller file
       #New-VHD -SizeBytes 5MB -Path c:\temp\headtrax.vhd -Dynamic -Confirm:$false
       $vhdObject = Mount-DiskImage c:\temp\headtrax.vhd -Passthru
       $disk = Initialize-Disk -Passthru -Number $vhdObject.Number -PartitionStyle MBR
@@ -105,7 +104,7 @@ jobs:
       $dirPath = $partition.DriveLetter + ':\HeadTraxRoot'
       New-Item -Path $dirPath -ItemType Directory
 
-      $packagePath = .\HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix
+      $packagePath = $(Build.ArtifactStagingDirectory)\HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix
       Write-Host $packagePath
       Write-Host $dirPath
       .\msixmgr\x64\msixmgr.exe -Unpack -packagePath $packagePath -destination $dirPath -applyacls
@@ -115,7 +114,7 @@ jobs:
      # $file.save(".\HeadTraxPackage\HeadTrax.appinstaller")
     displayName: Generate Expanded MSIX + VHD
 
-  - script: copy c:\temp\headtrax.vhd HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\headtrax.vhd
+  - script: copy c:\temp\headtrax.vhd HeadTraxPackage\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\headtrax.vhd
     displayName: Copy VHD to Output
     condition: succeeded()
 
