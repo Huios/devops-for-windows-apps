@@ -91,14 +91,14 @@ jobs:
   - task: CmdLine@2
     inputs:
       script: |
-        echo.> c:\temp\command.txt create vdisk file=c:\temp\headtrax.vhd maximum=100 
+        echo.> c:\temp\command.txt create vdisk file=c:\temp\headtrax.vhd maximum=150
         diskpart /s c:\temp\command.txt
 
   - powershell: |
       # Update appinstaller file
       #New-VHD -SizeBytes 5MB -Path c:\temp\headtrax.vhd -Dynamic -Confirm:$false
       $vhdObject = Mount-DiskImage c:\temp\headtrax.vhd -Passthru
-      $disk = Initialize-Disk -Passthru -Number $vhdObject.Number
+      $disk = Initialize-Disk -Passthru -Number $vhdObject.Number -PartitionStyle MBR
       $partition = New-Partition -AssignDriveLetter -UseMaximumSize -DiskNumber $disk.Number
       Format-Volume -FileSystem NTFS -Confirm:$false -DriveLetter $partition.DriveLetter -Force
       $dirPath = $partition.DriveLetter + ':\HeadTraxRoot'
