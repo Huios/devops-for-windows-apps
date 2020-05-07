@@ -109,10 +109,15 @@ jobs:
       Write-Host $packagePath
       Write-Host $dirPath
       .\msixmgr\x64\msixmgr.exe -Unpack -packagePath $packagePath -destination $dirPath -applyacls
+      Dismount-DiskImage c:\temp\headtrax.vhd -Passthru
 
      # $file.AppInstaller.MainPackage.Uri = "$(DistributionUrl)/HeadTraxPackage_$(GitBuildVersionSimple).0_x64.msix"
      # $file.save(".\HeadTraxPackage\HeadTrax.appinstaller")
     displayName: Generate Expanded MSIX + VHD
+
+  - script: copy c:\temp\headtrax.vhd HeadTraxPackage\AppPackages\HeadTraxPackage_$(GitBuildVersionSimple).0_x64_Test\headtrax.vhd
+    displayName: Copy VHD to Output
+    condition: succeeded()
 
   - task: PublishPipelineArtifact@0
     inputs:
